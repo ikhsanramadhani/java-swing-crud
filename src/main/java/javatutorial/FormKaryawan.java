@@ -96,10 +96,13 @@ public class FormKaryawan extends JFrame {
                     txtNip.setText(TblKar.getValueAt(row, 0).toString());
                     txtNama.setText(TblKar.getValueAt(row, 1).toString());
                     txtTempLhr.setText(TblKar.getValueAt(row, 2).toString());
-                    String tgllhr = TblKar.getValueAt(row, 3).toString();
-                    txtThn.setText(tgllhr.substring(0, 4));
-                    txtBln.setText(tgllhr.substring(5, 7));
-                    txtTgl.setText(tgllhr.substring(8, 10));
+                    String tgllhrDisplay = TblKar.getValueAt(row, 3).toString();
+                    String tgllhr = parseTanggalDariTabel(tgllhrDisplay);
+                    if (tgllhr != null && tgllhr.length() >= 10) {
+                        txtThn.setText(tgllhr.substring(0, 4));
+                        txtBln.setText(tgllhr.substring(5, 7));
+                        txtTgl.setText(tgllhr.substring(8, 10));
+                    }
                     txtJabatan.setText(TblKar.getValueAt(row, 4).toString());
                 }
             }
@@ -145,7 +148,7 @@ public class FormKaryawan extends JFrame {
             while (rs.next()) {
                 String[] rows = {
                     rs.getString(1), rs.getString(2), rs.getString(3),
-                    rs.getString(4), rs.getString(5)
+                    formatTanggalUntukTabel(rs.getString(4)), rs.getString(5)
                 };
                 defTab.addRow(rows);
             }
@@ -271,6 +274,29 @@ public class FormKaryawan extends JFrame {
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "Format tanggal tidak valid. Gunakan angka.");
             return null;
+        }
+    }
+
+    private String formatTanggalUntukTabel(String tanggal) {
+        if (tanggal == null || tanggal.length() < 10) return tanggal == null ? "" : tanggal;
+        try {
+            return tanggal.substring(8, 10) + "-" +
+                   tanggal.substring(5, 7) + "-" +
+                   tanggal.substring(0, 4);
+        } catch (IndexOutOfBoundsException e) {
+            return tanggal;
+        }
+    }
+
+    private String parseTanggalDariTabel(String tanggal) {
+        if (tanggal == null || tanggal.length() < 10) return tanggal;
+        try {
+            String hari = tanggal.substring(0, 2);
+            String bulan = tanggal.substring(3, 5);
+            String tahun = tanggal.substring(6, 10);
+            return tahun + "-" + bulan + "-" + hari;
+        } catch (IndexOutOfBoundsException e) {
+            return tanggal;
         }
     }
 }
