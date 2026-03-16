@@ -162,7 +162,7 @@ Jika MySQL menggunakan port selain 3306, update URL koneksi.
 
 ### Metode 1: Menggunakan Maven (Recommended)
 ```bash
-mvn compile exec:java -Dexec.mainClass="javatutorial.Main"
+mvn compile exec:java
 ```
 
 ### Metode 2: Manual Compile dan Run
